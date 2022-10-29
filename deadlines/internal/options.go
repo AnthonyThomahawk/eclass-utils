@@ -116,11 +116,31 @@ func GetOptions() (*Options, error) {
 	return opts, nil
 }
 
-func inputOptsStdin(opts *Options) error {
-	fmt.Print("Domain :")
-	fmt.Scanln(&opts.BaseDomain)
+func GetYNAnswer() bool {
+	var ans string
+	fmt.Scanln(&ans)
 
-	return nil
+	for ans != "y" && ans != "n" && ans != "Y" && ans != "N" {
+		fmt.Print("Incorrect input, please re-enter :")
+		fmt.Scanln(&ans)
+	}
+
+	return ans == "Y" || ans == "y"
+}
+
+func inputOptsStdin(opts *Options) {
+	fmt.Print("Domain :")
+
+	_, err := fmt.Scanln(&opts.BaseDomain)
+	if err != nil {
+		return
+	}
+
+	fmt.Print("Export as plain text? (Y/N)")
+	opts.PlainText = GetYNAnswer()
+
+	fmt.Print("Export ICS? (Y/N)")
+	opts.ExportICS = GetYNAnswer()
 }
 
 func GetCreds() (*Creds, error) {
